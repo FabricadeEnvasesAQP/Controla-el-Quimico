@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego: Controla el Químico</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f3f9ff; margin: 20px; }
+    .card { background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 600px; margin: auto; }
+    h2 { color: #005a9c; }
+    .options button { display: block; width: 100%; margin: 8px 0; padding: 10px; border: none; border-radius: 6px; background: #e1ecf4; cursor: pointer; }
+    .options button:hover { background: #cde4f7; }
+    .correct { background-color: #c8e6c9; }
+    .incorrect { background-color: #ffcdd2; }
+    .hidden { display: none; }
+    .result { font-weight: bold; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <h2 id="question">Cargando pregunta...</h2>
+  <div class="options" id="options"></div>
+  <div class="result" id="result"></div>
+  <button onclick="nextCard()">Siguiente</button>
+</div>
+
+<script>
+const cards = [
+  {
+    question: "Estás retirando un producto químico del almacén. El envase está limpio, pero la etiqueta está borrosa. ¿Qué haces?",
+    options: [
+      { text: "a) Lo uso porque ya sé cuál es.", correct: false },
+      { text: "b) Lo devuelvo y pido uno con etiqueta legible.", correct: true },
+      { text: "c) Lo uso y después lo rotulo.", correct: false }
+    ]
+  },
+  {
+    question: "Encuentras un derrame de desinfectante cerca de una zona de proceso. ¿Qué haces primero?",
+    options: [
+      { text: "a) Ignorarlo porque no es parte de mi proceso.", correct: false },
+      { text: "b) Cubrirlo con papel y seguir trabajando.", correct: false },
+      { text: "c) Activar el procedimiento de derrames y reportar.", correct: true }
+    ]
+  },
+  {
+    question: "Recibes lubricante nuevo. ¿Dónde debe almacenarse?",
+    options: [
+      { text: "a) Cerca de la zona de trabajo donde se va a usar.", correct: false },
+      { text: "b) En el almacén de químicos, separado de insumos y producto terminado.", correct: true },
+      { text: "c) En la mesa de trabajo o herramientas bien resguardado.", correct: false }
+    ]
+  },
+  {
+    question: "Ves a un contratista ingresar con un químico no conocido. ¿Qué haces?",
+    options: [
+      { text: "a) Lo dejas pasar, él sabe qué producto está usando.", correct: false },
+      { text: "b) Le pides autorización previa y la evaluación del químico.", correct: true },
+      { text: "c) Lo observas y si pasa algo recién reportas.", correct: false }
+    ]
+  },
+  {
+    question: "Te piden usar alcohol para desinfección. ¿Qué etiqueta debe tener el envase?",
+    options: [
+      { text: "a) Ninguna, es un producto común y se acaba rápido.", correct: false },
+      { text: "b) Etiqueta blanca con nombre del químico.", correct: true },
+      { text: "c) Etiqueta blanca, ya contiene datos y es más rápido.", correct: false }
+    ]
+  }
+];
+
+let current = 0;
+
+function showCard(index) {
+  const card = cards[index];
+  document.getElementById('question').innerText = card.question;
+  const optionsContainer = document.getElementById('options');
+  const result = document.getElementById('result');
+  optionsContainer.innerHTML = '';
+  result.innerHTML = '';
+  card.options.forEach(option => {
+    const btn = document.createElement('button');
+    btn.innerText = option.text;
+    btn.onclick = () => {
+      if (option.correct) {
+        btn.className = 'correct';
+        result.innerText = '¡Correcto! Puedes llevar tu souvenir.';
+      } else {
+        btn.className = 'incorrect';
+        result.innerText = 'Incorrecto. Solicita que te refuercen en tu área en el "Control de Productos Químicos".';
+      }
+    };
+    optionsContainer.appendChild(btn);
+  });
+}
+
+function nextCard() {
+  current = (current + 1) % cards.length;
+  showCard(current);
+}
+
+showCard(current);
+</script>
+
+</body>
+</html>
