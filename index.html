@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Juego: Controla el Químico</title>
-  <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -35,7 +35,9 @@
       padding: 20px;
       margin: 40px auto;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      max-width: 600px;
+      max-width: 600px; /* Ancho máximo para pantallas grandes */
+      width: 90%; /* Ancho por defecto para que sea más responsive */
+      box-sizing: border-box; /* Incluye padding y border en el ancho total */
       opacity: 0;
       transform: translateY(20px);
       animation: fadeIn 0.6s ease-in-out forwards;
@@ -46,22 +48,125 @@
         transform: none;
       }
     }
-    h2 { color: #005a9c; }
+    h2 { 
+      color: #005a9c; 
+      font-size: 1.8em; /* Tamaño de fuente para la pregunta */
+      margin-bottom: 20px;
+    }
     .options button {
       display: block;
       width: 100%;
       margin: 8px 0;
-      padding: 10px;
+      padding: 14px; /* Aumentado el padding para botones más grandes */
       border: none;
       border-radius: 6px;
       background: #e1ecf4;
       cursor: pointer;
       transition: background-color 0.3s ease;
+      font-size: 1.2em; /* Tamaño de fuente para las opciones */
+      text-align: left; /* Alinea el texto a la izquierda */
+      line-height: 1.4; /* Espaciado entre líneas para mejor legibilidad */
     }
     .options button:hover { background: #cde4f7; }
     .correct { background-color: #c8e6c9 !important; }
     .incorrect { background-color: #ffcdd2 !important; }
-    .result { font-weight: bold; margin-top: 10px; }
+    .result { 
+      font-weight: bold; 
+      margin-top: 20px; /* Aumentado el margen */
+      font-size: 1.2em; /* Tamaño de fuente para el resultado */
+    }
+    /* Estilos para el botón "Siguiente" */
+    .card .next-button { /* Añadida una clase específica para el botón Siguiente */
+        display: block;
+        width: 100%;
+        padding: 14px 20px;
+        margin-top: 25px; /* Aumentado el margen */
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 1.2em;
+        transition: background-color 0.3s ease;
+    }
+    .card .next-button:hover {
+        background-color: #0056b3;
+    }
+
+    /* --- Media Queries para dispositivos móviles --- */
+
+    /* Pantallas hasta 768px (tablets en vertical, móviles grandes) */
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 1.6em; /* Reducido un poco para móviles */
+        }
+        .header h3 {
+            font-size: 1em; /* Reducido un poco para móviles */
+        }
+        .card {
+            margin: 20px auto;
+            padding: 15px;
+            width: 95%; /* Ocupa más ancho en tablets/móviles grandes */
+            max-width: none; /* Elimina el límite de ancho para permitir que ocupe más */
+        }
+        h2 { /* Pregunta */
+            font-size: 1.5em; 
+            margin-bottom: 15px;
+        }
+        .options button { /* Opciones de respuesta */
+            font-size: 1.1em; 
+            padding: 12px;
+            margin: 10px 0;
+        }
+        .result { /* Mensaje de resultado */
+            font-size: 1.1em;
+            margin-top: 15px;
+        }
+        .card .next-button { /* Botón Siguiente */
+            font-size: 1.1em;
+            padding: 12px 15px;
+            margin-top: 20px;
+        }
+    }
+
+    /* Pantallas hasta 480px (móviles pequeños) */
+    @media (max-width: 480px) {
+        .header {
+            padding: 10px;
+        }
+        .header img {
+            max-height: 45px;
+        }
+        .header h1 {
+            font-size: 1.4em;
+        }
+        .header h3 {
+            font-size: 0.9em;
+        }
+        .card {
+            margin: 10px; /* Menos margen en los lados */
+            padding: 10px;
+            width: 98%; /* Ocupa casi todo el ancho disponible */
+        }
+        h2 { /* Pregunta */
+            font-size: 1.3em; 
+            margin-bottom: 10px;
+        }
+        .options button { /* Opciones de respuesta */
+            font-size: 1em; 
+            padding: 10px;
+            margin: 5px 0;
+        }
+        .result { /* Mensaje de resultado */
+            font-size: 1em;
+            margin-top: 10px;
+        }
+        .card .next-button { /* Botón Siguiente */
+            font-size: 1em;
+            padding: 10px 12px;
+            margin-top: 15px;
+        }
+    }
   </style>
 </head>
 <body>
@@ -76,7 +181,7 @@
   <h2 id="question">Cargando pregunta...</h2>
   <div class="options" id="options"></div>
   <div class="result" id="result"></div>
-  <button onclick="nextCard()">Siguiente</button>
+  <button class="next-button" onclick="nextCard()">Siguiente</button>
 </div>
 
 <script>
@@ -136,6 +241,11 @@ function showCard(index) {
     const btn = document.createElement('button');
     btn.innerText = option.text;
     btn.onclick = () => {
+      // Deshabilitar todos los botones de opciones después de una selección
+      Array.from(optionsContainer.children).forEach(button => {
+        button.disabled = true;
+      });
+
       if (option.correct) {
         btn.className = 'correct';
         result.innerText = '¡Correcto! Puedes llevar tu souvenir.';
